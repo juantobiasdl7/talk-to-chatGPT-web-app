@@ -6,6 +6,26 @@ const AudioRecorder = () => {
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
 
+    const uploadAudioToServer = async (audioBlob) => {
+        const formData = new FormData();
+        formData.append('audio', audioBlob);
+    
+        try {
+            const response = await fetch('http://localhost:5000/v1/api/chat/process-audio', {
+                method: 'POST',
+                body: formData,
+                // Don't set Content-Type header, let the browser set it
+            });
+            const data = await response;
+            console.log(data);
+            // Handle the response data (transcription)
+        } catch (error) {
+            console.error('Error uploading audio:', error);
+        }
+    };
+    
+    
+
     const startRecording = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -30,6 +50,7 @@ const AudioRecorder = () => {
             setAudioUrl(audioUrl);
             audioChunksRef.current = [];
             setIsRecording(false);
+            uploadAudioToServer(audioBlob);
         });
     };
 
