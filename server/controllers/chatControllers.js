@@ -22,7 +22,12 @@ exports.processAudio = async (req, res) => {
         // send it to OpenAI for transcription, get the chat response,
         // generate the audio from the text response, and return it to the client.
         const transcription = await openAIHelper.transcribeAudio(audioPath, req.file); // You'll need to set up file handling middleware like 'multer'.
-        // const response = await openAIHelper.getChatResponse(transcription);
+
+        console.log('Transcription:', transcription);
+        
+        const response = await openAIHelper.getChatResponse(transcription);
+
+        console.log('Response:', response);
         // const audioResponse = await openAIHelper.textToAudio(response);
         
         // Send back the audio response as a file or a buffer
