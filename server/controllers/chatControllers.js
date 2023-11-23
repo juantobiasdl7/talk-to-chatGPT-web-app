@@ -25,13 +25,20 @@ exports.processAudio = async (req, res) => {
 
         console.log('Transcription:', transcription);
         
-        const response = await openAIHelper.getChatResponse(transcription);
+        const chatGPTResponse = await openAIHelper.getChatResponse(transcription);
 
-        console.log('Response:', response);
-        // const audioResponse = await openAIHelper.textToAudio(response);
+        console.log('Response:', chatGPTResponse);
         
-        // Send back the audio response as a file or a buffer
-        res.status(200).send(transcription);
+        const audioResponse = await openAIHelper.textToAudio(chatGPTResponse);
+
+        console.log('Audio Response:', audioResponse);
+
+        // Set the appropriate content type for the audio file
+        res.set('Content-Type', 'audio/mpeg-3');
+
+        // Send the audio buffer as a binary stream
+        res.end(Buffer.from(audioResponse)); // Convert ArrayBuffer to Node.js Buffer and send it
+    
     } catch (error) {
         console.error('Error processing audio:', error);
         res.status(500).send('An error occurred while processing the audio.');

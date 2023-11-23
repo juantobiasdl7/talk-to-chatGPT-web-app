@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 const AudioRecorder = () => {
     const [isRecording, setIsRecording] = useState(false);
     const [audioUrl, setAudioUrl] = useState('');
+    const [chatGPTAudioUrl, setChatGPTAudioUrl] = useState('');
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
 
@@ -16,8 +17,19 @@ const AudioRecorder = () => {
                 body: formData,
                 // Don't set Content-Type header, let the browser set it
             });
-            const data = await response;
-            console.log(data);
+
+            console.log(response);
+
+            //const arrayBuffer = await response.arrayBuffer();
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+
+            //console.log(arrayBuffer);
+            console.log(audioBlob);
+
+            setChatGPTAudioUrl(audioUrl);
+            
+            console.log("Front end response:" + audioUrl);
             // Handle the response data (transcription)
         } catch (error) {
             console.error('Error uploading audio:', error);
@@ -71,6 +83,7 @@ const AudioRecorder = () => {
                 Stop
             </button>
             {audioUrl && <audio className="mt-4" controls src={audioUrl}></audio>}
+            {chatGPTAudioUrl && <audio className="mt-4" controls src={chatGPTAudioUrl}></audio>}
         </div>
     );
 };

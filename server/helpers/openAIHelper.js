@@ -87,11 +87,11 @@ exports.getChatResponse = async (transcription) => {
             throw new Error(data.error.message);
         }
 
-        // Append ChatGPT's response to the conversation history
-        // conversationHistory.push({
-        //     role: 'assistant',
-        //     content: data.choices[0].message.content,
-        // });
+        //Append ChatGPT's response to the conversation history
+        conversationHistory.push({
+            role: 'assistant',
+            content: data.choices[0].message.content,
+        });
 
         // Return the latest response along with the updated conversation history
         return data.choices[0].message.content;
@@ -102,8 +102,39 @@ exports.getChatResponse = async (transcription) => {
     }
 };
 
-// exports.textToAudio = async (text) => {
-//     // Logic to convert text to audio using OpenAI's API or another service
-//     // Placeholder for text-to-audio logic
-// };
+exports.textToAudio = async (text) => {
+    // Logic to convert text to audio using OpenAI's API or another service
+    // Placeholder for text-to-audio logic
+    try {
+        const response = await fetch('https://api.openai.com/v1/audio/speech', {
+            method: 'POST',
+            headers: {
+            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+            model: "tts-1",
+            voice: "alloy",
+            input: text,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // You receive a stream as a response, so we need to read the stream
+        const arrayBuffer = await response.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+
+        // Write the audio file to disk
+        await fs.promises.writeFile('./reponse.mp3', buffer);
+        console.log(`Audio file written to response.mp3`);
+
+        return arrayBuffer;
+
+        } catch (error) {
+        console.error(`Error creating speech file: ${error}`);
+        }
+};
 
