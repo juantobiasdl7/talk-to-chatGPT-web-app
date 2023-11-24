@@ -55,6 +55,7 @@ const AudioRecorder = () => {
     };
 
     const stopRecording = () => {
+        setAudioUrl('');
         mediaRecorderRef.current.stop();
         mediaRecorderRef.current.addEventListener('stop', () => {
             const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/mpeg-3' });
