@@ -23,17 +23,17 @@ exports.transcribeAudio = async (audioPath, reqFile) => {
 
         const newfile = fs.createReadStream(audioPath);
 
-        // newfile.on('open', () => {
-        //     console.log('Stream opened:', audioPath);
-        // });
+        newfile.on('open', () => {
+            console.log('Stream opened:', audioPath);
+        });
         
-        // newfile.on('error', (err) => {
-        //     console.error('Error with stream:', audioPath, err);
-        // });
+        newfile.on('error', (err) => {
+            console.error('Error with stream:', audioPath, err);
+        });
         
-        // newfile.on('ready', () => {
-        //     console.log('Stream is ready:', audioPath);
-        // });
+        newfile.on('ready', () => {
+            console.log('Stream is ready:', audioPath);
+        });
 
         form.append('file', newfile, {
             filename: reqFile.originalname,

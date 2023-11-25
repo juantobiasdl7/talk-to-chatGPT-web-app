@@ -18,8 +18,6 @@ const AudioRecorder = () => {
                 // Don't set Content-Type header, let the browser set it
             });
 
-            console.log(response);
-
             //const arrayBuffer = await response.arrayBuffer();
             const audioBlob = await response.blob();
             const audioUrl = URL.createObjectURL(audioBlob);
@@ -37,9 +35,10 @@ const AudioRecorder = () => {
     };
     
     
-
     const startRecording = async () => {
         try {
+            setAudioUrl('');
+            setChatGPTAudioUrl('');
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorderRef.current = new MediaRecorder(stream);
             mediaRecorderRef.current.start();
@@ -55,7 +54,7 @@ const AudioRecorder = () => {
     };
 
     const stopRecording = () => {
-        setAudioUrl('');
+        
         mediaRecorderRef.current.stop();
         mediaRecorderRef.current.addEventListener('stop', () => {
             const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/mpeg-3' });
@@ -84,7 +83,7 @@ const AudioRecorder = () => {
                 Stop
             </button>
             {audioUrl && <audio className="mt-4" controls src={audioUrl}></audio>}
-            {chatGPTAudioUrl && <audio className="mt-4" controls src={chatGPTAudioUrl}></audio>}
+            {chatGPTAudioUrl && <audio className="mt-4" controls autoPlay src={chatGPTAudioUrl}></audio>}
         </div>
     );
 };
