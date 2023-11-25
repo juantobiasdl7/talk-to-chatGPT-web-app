@@ -125,11 +125,11 @@ exports.textToAudio = async (text) => {
 
         // You receive a stream as a response, so we need to read the stream
         const arrayBuffer = await response.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
+        // const buffer = Buffer.from(arrayBuffer);
 
         // Write the audio file to disk
-        await fs.promises.writeFile('./reponse.mp3', buffer);
-        console.log(`Audio file written to response.mp3`);
+        // await fs.promises.writeFile('./reponse.mp3', buffer);
+        // console.log(`Audio file written to response.mp3`);
 
         return arrayBuffer;
 
